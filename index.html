@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CymorTech Inner Circle | VCF Verification</title>
+    <style>
+        :root {
+            --primary-bg: #f9fdfb;
+            --main-gradient: linear-gradient(135deg, #25d366 0%, #34b7f1 100%);
+            --card-bg: #ffffff;
+            --border-radius: 20px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .floating-numbers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .floating-numbers span {
+            position: absolute;
+            color: rgba(0,0,0,0.08);
+            font-size: 14px;
+            animation: floatNumbers 10s linear infinite;
+        }
+
+        @keyframes floatNumbers {
+            from { transform: translateY(100vh); }
+            to { transform: translateY(-10vh); }
+        }
+
+        .page-container {
+            flex: 1;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-header { text-align: center; margin-bottom: 10px; }
+        h2 { margin: 0; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .desc { text-align: center; font-size: 13px; color: #555; margin-bottom: 20px; }
+
+        .target-box { text-align: center; padding: 15px; border: 2px solid #25d366; border-radius: 15px; margin-bottom: 20px; }
+        .target-box h3 { margin: 0; color: #25d366; }
+
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border: none; border-radius: 10px; background: var(--main-gradient); color: white; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: scale(1.02); }
+
+        .services-link { display: block; text-align: center; margin-top: 15px; color: #34b7f1; text-decoration: none; font-weight: 600; font-size: 13px; }
+        .love-desc { text-align: center; font-size: 11px; color: #888; margin-top: 5px; }
+
+        footer { text-align: center; padding: 20px; font-size: 11px; color: #666; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="floating-numbers" id="numbers"></div>
+
+<div class="page-container">
+    <main class="main-card">
+        <header class="card-header">
+            <h2>Cymor Views Booster</h2>
+        </header>
+
+        <p class="desc">
+            Boost your WhatsApp status viewers and connect with people worldwide instantly.Fill your name below and you Whatsapp number and then click the verify button to join the Whatsapp group where the vcf file will be dropped.
+        </p>
+
+        <div class="target-box">
+            <h3 id="targetDisplay">Goal: 500 Users</h3>
+        </div>
+
+        <form action="https://formspree.io/f/xojrvoer" method="POST">
+            <input type="hidden" name="_next" value="https://chat.whatsapp.com/Hw6104rGim9L2MO2GaUynO">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="tel" name="phone" placeholder="WhatsApp Number" required>
+            <button type="submit">Verify & Join</button>
+        </form>
+
+        <a href="https://cymorlovehub.netlify.app/" class="services-link">Explore CymorLove Hub ❤️</a>
+        <p class="love-desc">A premium online love letter generator that crafts bespoke, heartfelt messages and creates unique, shareable links to surprise your special someone.</p>
+    </main>
+</div>
+
+<footer>
+    <p>Copyright © CymorTechServices 2026</p>
+    <p>Site made by the legendary Smiley Cymor</p>
+</footer>
+
+<script>
+    const container = document.getElementById("numbers");
+    for (let i = 0; i < 40; i++) {
+        let span = document.createElement("span");
+        span.innerText = Math.floor(Math.random() * 999);
+        span.style.left = Math.random() * 100 + "vw";
+        span.style.animationDuration = (5 + Math.random() * 10) + "s";
+        span.style.fontSize = (10 + Math.random() * 20) + "px";
+        container.appendChild(span);
+    }
+</script>
+
+</body>
+</html>
