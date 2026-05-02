@@ -82,11 +82,46 @@
         .love-desc { text-align: center; font-size: 11px; color: #888; margin-top: 5px; }
 
         footer { text-align: center; padding: 20px; font-size: 11px; color: #666; width: 100%; }
+
+        /* Verifying overlay */
+        #verifyOverlay {
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background: rgba(255,255,255,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        #verifyOverlay div {
+            width:50px;
+            height:50px;
+            border:5px solid #eee;
+            border-top:5px solid #25d366;
+            border-radius:50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
 <div class="floating-numbers" id="numbers"></div>
+
+<!-- Verifying Overlay -->
+<div id="verifyOverlay">
+    <div></div>
+    <p style="margin-top:15px; font-weight:600; color:#333;">Verifying...</p>
+</div>
 
 <div class="page-container">
     <main class="main-card">
@@ -95,15 +130,14 @@
         </header>
 
         <p class="desc">
-            Boost your WhatsApp status viewers and connect with people worldwide instantly.Fill your name below and you Whatsapp number and then click the verify button to join the Whatsapp group where the vcf file will be dropped.
+            Boost your WhatsApp status viewers and connect with people worldwide instantly.Just fill in your name and registered Whatsapp number below and click verify to join the Whatsapp group where the vcf file will be dropped.It is that simple😛
         </p>
 
         <div class="target-box">
             <h3 id="targetDisplay">Goal: 500 Users</h3>
         </div>
 
-        <form action="https://formspree.io/f/xojrvoer" method="POST">
-            <input type="hidden" name="_next" value="https://chat.whatsapp.com/Hw6104rGim9L2MO2GaUynO">
+        <form id="joinForm">
             <input type="text" name="name" placeholder="Your Name" required>
             <input type="tel" name="phone" placeholder="WhatsApp Number" required>
             <button type="submit">Verify & Join</button>
@@ -120,6 +154,7 @@
 </footer>
 
 <script>
+    // Floating numbers
     const container = document.getElementById("numbers");
     for (let i = 0; i < 40; i++) {
         let span = document.createElement("span");
@@ -129,6 +164,32 @@
         span.style.fontSize = (10 + Math.random() * 20) + "px";
         container.appendChild(span);
     }
+
+    // Form handling with verifying animation
+    document.getElementById("joinForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        // Show overlay
+        document.getElementById("verifyOverlay").style.display = "flex";
+
+        // Send data silently
+        fetch("https://formspree.io/f/xojrvoer", {
+            method: "POST",
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        });
+
+        // Wait then redirect
+        setTimeout(() => {
+            window.location.href = "whatsapp://chat?code=Hw6104rGim9L2MO2GaUynO";
+
+            setTimeout(() => {
+                window.location.href = "https://chat.whatsapp.com/Hw6104rGim9L2MO2GaUynO?mode=gi_t";
+            }, 1200);
+        }, 1500);
+    });
 </script>
 
 </body>
