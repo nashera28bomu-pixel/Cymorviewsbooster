@@ -2,195 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CymorTech Inner Circle | VCF Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CymorViewsBooster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary-bg: #f9fdfb;
-            --main-gradient: linear-gradient(135deg, #25d366 0%, #34b7f1 100%);
-            --card-bg: #ffffff;
-            --border-radius: 20px;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f0f2f5;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        .floating-numbers {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .floating-numbers span {
-            position: absolute;
-            color: rgba(0,0,0,0.08);
-            font-size: 14px;
-            animation: floatNumbers 10s linear infinite;
-        }
-
-        @keyframes floatNumbers {
-            from { transform: translateY(100vh); }
-            to { transform: translateY(-10vh); }
-        }
-
-        .page-container {
-            flex: 1;
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .main-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 20px;
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-header { text-align: center; margin-bottom: 10px; }
-        h2 { margin: 0; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .desc { text-align: center; font-size: 13px; color: #555; margin-bottom: 20px; }
-
-        .target-box { text-align: center; padding: 15px; border: 2px solid #25d366; border-radius: 15px; margin-bottom: 20px; }
-        .target-box h3 { margin: 0; color: #25d366; }
-
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; border: none; border-radius: 10px; background: var(--main-gradient); color: white; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-        button:hover { transform: scale(1.02); }
-
-        .services-link { display: block; text-align: center; margin-top: 15px; color: #34b7f1; text-decoration: none; font-weight: 600; font-size: 13px; }
-        .love-desc { text-align: center; font-size: 11px; color: #888; margin-top: 5px; }
-
-        footer { text-align: center; padding: 20px; font-size: 11px; color: #666; width: 100%; }
-
-        /* Verifying overlay */
-        #verifyOverlay {
-            position: fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            background: rgba(255,255,255,0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 9999;
-        }
-
-        #verifyOverlay div {
-            width:50px;
-            height:50px;
-            border:5px solid #eee;
-            border-top:5px solid #25d366;
-            border-radius:50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        body { background: #0f172a; color: white; overflow-x: hidden; font-family: 'Segoe UI', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .floating-num { position: absolute; color: rgba(255, 255, 255, 0.05); font-weight: bold; pointer-events: none; animation: float linear infinite; z-index: -1; }
+        @keyframes float { from { transform: translateY(100vh); } to { transform: translateY(-100px); } }
     </style>
 </head>
-<body>
+<body class="p-6">
 
-<div class="floating-numbers" id="numbers"></div>
+    <div id="floatContainer" class="fixed inset-0 z-0"></div>
 
-<!-- Verifying Overlay -->
-<div id="verifyOverlay">
-    <div></div>
-    <p style="margin-top:15px; font-weight:600; color:#333;">Verifying...</p>
-</div>
+    <div id="loginBox" class="hidden fixed inset-0 flex items-center justify-center bg-black/70 z-50">
+        <div class="glass p-6 rounded-2xl w-80 text-center">
+            <h2 class="text-xl font-bold mb-4">Admin Access</h2>
+            <input id="adminPass" type="password" placeholder="Enter password" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 mb-4 text-center">
+            <div class="flex gap-2">
+                <button onclick="document.getElementById('loginBox').style.display='none'" class="w-full bg-slate-600 py-2 rounded-xl">Cancel</button>
+                <button onclick="verifyAdmin()" class="w-full bg-green-500 py-2 rounded-xl font-bold">Login</button>
+            </div>
+        </div>
+    </div>
 
-<div class="page-container">
-    <main class="main-card">
-        <header class="card-header">
-            <h2>Cymor Views Booster</h2>
-        </header>
+    <div class="max-w-md mx-auto relative z-10">
+        <h1 class="text-3xl font-extrabold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
+            Cymor Views Booster
+        </h1>
 
-        <p class="desc">
-            Boost your WhatsApp status viewers and connect with people worldwide instantly.Just fill in your name and registered Whatsapp number below and click verify to join the Whatsapp group where the vcf file will be dropped.It is that simple😛
+        <p class="text-center text-sm text-gray-300 mb-6">
+            Boost your WhatsApp reach with faster views and connect with people across the world instantly.
         </p>
 
-        <div class="target-box">
-            <h3 id="targetDisplay">Goal: 500 Users</h3>
+        <div class="grid grid-cols-3 gap-2 mb-6">
+            <div class="glass p-3 rounded-2xl text-center"><div class="text-lg font-bold">500</div><small class="text-[10px] text-gray-400">TARGET</small></div>
+            <div class="glass p-3 rounded-2xl text-center border border-blue-500/30"><div id="currentCount" class="text-lg font-bold text-blue-400">0</div><small class="text-[10px] text-gray-400">CURRENT</small></div>
+            <div class="glass p-3 rounded-2xl text-center border border-orange-500/30"><div id="remainingCount" class="text-lg font-bold text-orange-400">500</div><small class="text-[10px] text-gray-400">REMAINING</small></div>
         </div>
 
-        <form id="joinForm">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="tel" name="phone" placeholder="WhatsApp Number" required>
-            <button type="submit">Verify & Join</button>
-        </form>
+        <div class="glass p-4 rounded-xl mb-6 text-center text-sm border-l-4 border-orange-500">
+            # Prefix active: Every exported contact name will begin with 🔥.
+        </div>
 
-        <a href="https://cymorlovehub.netlify.app/" class="services-link">Explore CymorLove Hub ❤️</a>
-        <p class="love-desc">A premium online love letter generator that crafts bespoke, heartfelt messages and creates unique, shareable links to surprise your special someone.</p>
-    </main>
-</div>
+        <div class="glass p-6 rounded-3xl mb-8">
+            <input type="text" id="name" placeholder="Full Name" class="w-full bg-slate-800 p-3 rounded-xl border border-slate-700 mb-3 outline-none focus:border-green-500">
+            <input type="text" id="phone" placeholder="Country code (no +) e.g. 254712345678" class="w-full bg-slate-800 p-3 rounded-xl border border-slate-700 mb-4 outline-none focus:border-green-500">
+            <button id="submitBtn" onclick="addContact()" class="w-full bg-gradient-to-r from-green-600 to-emerald-500 py-3 rounded-xl font-bold hover:scale-[1.02] transition-transform">
+                Verify & Join ✅️
+            </button>
+        </div>
 
-<footer>
-    <p>Copyright © CymorTechServices 2026</p>
-    <p>Site made by the legendary Smiley Cymor</p>
-</footer>
+        <button onclick="document.getElementById('loginBox').style.display='flex'" class="w-full py-3 bg-slate-800 border border-slate-700 rounded-xl text-gray-400 hover:text-white transition-colors mb-8">
+            🔒 Admin Export (VCF)
+        </button>
 
-<script>
-    // Floating numbers
-    const container = document.getElementById("numbers");
-    for (let i = 0; i < 40; i++) {
-        let span = document.createElement("span");
-        span.innerText = Math.floor(Math.random() * 999);
-        span.style.left = Math.random() * 100 + "vw";
-        span.style.animationDuration = (5 + Math.random() * 10) + "s";
-        span.style.fontSize = (10 + Math.random() * 20) + "px";
-        container.appendChild(span);
-    }
+        <div class="text-center mt-10 space-y-1">
+            <p class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 font-bold italic">Developed by the Legendary Smiley Cymor</p>
+            <p class="text-slate-500 text-xs">Copyright &copy; CymorTechServices2026</p>
+            <a href="https://wa.me/254113821327" class="text-green-400 text-xs font-semibold hover:underline">Contact Admin: 0113821327</a>
+        </div>
+    </div>
 
-    // Form handling with verifying animation
-    document.getElementById("joinForm").addEventListener("submit", function(e) {
-        e.preventDefault();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-        const formData = new FormData(this);
+  const firebaseConfig = {
+    apiKey: "AIzaSyC4ZitxZNaCiXSdA71nCtUlfN7peIHhiaE",
+    authDomain: "cymorviewsbooster.firebaseapp.com",
+    projectId: "cymorviewsbooster",
+    storageBucket: "cymorviewsbooster.firebasestorage.app",
+    messagingSenderId: "375656492821",
+    appId: "1:375656492821:web:e427acf5eac20b25f0031c"
+  };
 
-        // Show overlay
-        document.getElementById("verifyOverlay").style.display = "flex";
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const contactsRef = collection(db, "contacts");
 
-        // Send data silently
-        fetch("https://formspree.io/f/xojrvoer", {
-            method: "POST",
-            body: formData,
-            headers: { 'Accept': 'application/json' }
-        });
+  onSnapshot(contactsRef, (snapshot) => {
+      const count = snapshot.size;
+      document.getElementById('currentCount').innerText = count;
+      document.getElementById('remainingCount').innerText = Math.max(0, 500 - count);
+  });
 
-        // Wait then redirect
-        setTimeout(() => {
-            window.location.href = "whatsapp://chat?code=Hw6104rGim9L2MO2GaUynO";
+  function animateNumbers() {
+      const container = document.getElementById('floatContainer');
+      setInterval(() => {
+          const span = document.createElement('span');
+          span.className = 'floating-num';
+          span.innerText = Math.floor(Math.random() * 999);
+          span.style.left = Math.random() * 100 + 'vw';
+          span.style.fontSize = Math.random() * 20 + 10 + 'px';
+          span.style.animationDuration = Math.random() * 5 + 5 + 's';
+          container.appendChild(span);
+          setTimeout(() => span.remove(), 10000);
+      }, 800);
+  }
+  animateNumbers();
 
-            setTimeout(() => {
-                window.location.href = "https://chat.whatsapp.com/Hw6104rGim9L2MO2GaUynO?mode=gi_t";
-            }, 1200);
-        }, 1500);
-    });
+  window.verifyAdmin = async function() {
+      if (document.getElementById('adminPass').value === "bomu@09") {
+          document.getElementById('loginBox').style.display = 'none';
+          await adminExport();
+      } else { alert("Wrong password!"); }
+  }
+
+  window.addContact = async function () {
+      const name = document.getElementById('name').value;
+      let phone = document.getElementById('phone').value;
+      if(!name || phone.length < 9 || phone.includes('+')) return alert("Enter valid number starting with country code (no + sign), e.g. 254712345678.");
+      const btn = document.getElementById('submitBtn');
+      btn.innerText = "Verifying...";
+      btn.disabled = true;
+      await addDoc(contactsRef, { name, phone, createdAt: Date.now() });
+      setTimeout(() => { window.location.href = "https://chat.whatsapp.com/Hw6104rGim9L2MO2GaUynO?mode=gi_t"; }, 2000);
+  }
+
+  window.adminExport = async function () {
+      const snapshot = await getDocs(contactsRef);
+      let vcardData = "";
+      snapshot.forEach(doc => {
+          const c = doc.data();
+          vcardData += `BEGIN:VCARD\nVERSION:3.0\nFN:🔥${c.name}\nTEL:+${c.phone}\nEND:VCARD\n`;
+      });
+      const blob = new Blob([vcardData], { type: 'text/vcard' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CymorTechContacts.vcf';
+      a.click();
+  }
 </script>
-
 </body>
 </html>
