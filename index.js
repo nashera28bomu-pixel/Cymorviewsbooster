@@ -4,7 +4,7 @@ const axios = require('axios');
 const chalk = require('chalk');
 const os = require('os');
 const moment = require('moment');
-
+const express = require('express');
 // =========================================
 // BOT CONFIGURATION
 // =========================================
@@ -593,3 +593,17 @@ bot.launch().then(() => {
 // =========================================
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+// =========================================
+// EXPRESS SERVER FOR RENDER
+// =========================================
+const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('🤖 Smiley Cymor Bot is running successfully!');
+});
+
+app.listen(PORT, () => {
+    console.log(`🌐 Web server running on port ${PORT}`);
+});
